@@ -600,4 +600,19 @@ public class GameBoard {
 		}
 		return numOfMoves;
 	}
+	
+	public int modifiedEveryOtherSearch(){
+		int numOfHits = 0;
+		int numOfMoves = 0;
+		int [][] checkArray = new int [size][size];
+		Random generator = new Random();
+		
+		for (int row=0; row<size; row++){
+			for (int col=0; col<size; col++){
+				checkArray[row][col] = 0;
+			}
+		}
+		
+		return numOfMoves;
+	}
 }

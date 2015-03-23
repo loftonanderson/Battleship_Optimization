@@ -107,10 +107,10 @@ public class Main {
 			modifiedRandomAvg = modifiedRandomAvg/numOfBoards;
 			System.out.println();
 			System.out.println();
-			System.out.println("Linear Average: " + linearAvg);
-			System.out.println("Random Average: " + randomAvg);
-			System.out.println("Modified Linear Average: " + modifiedLinearAvg);
-			System.out.println("Modified Random Average: " + modifiedRandomAvg);
+			System.out.println("Linear Average: " + getGrade(linearAvg) + " ("+linearAvg+")");
+			System.out.println("Random Average: " + getGrade(randomAvg) + " ("+randomAvg+")");
+			System.out.println("Modified Linear Average: " + getGrade(modifiedLinearAvg) + " ("+modifiedLinearAvg+")");
+			System.out.println("Modified Random Average: " + getGrade(modifiedRandomAvg) + " ("+modifiedRandomAvg+")");
 		}
 		
 // ---------------------------------------------------------------------------------		
@@ -146,5 +146,52 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public static String getGrade(double score){
+		String grade = "error";
+		if (score> 17 && score <= 30){
+			grade = "A+";
+		}
+		else if (score> 30 && score <= 40){
+			grade = "A";
+		}
+		else if (score> 40 && score <= 45){
+			grade = "A-";
+		}
+		else if (score> 45 && score <= 50){
+			grade = "B+";
+		}	
+		else if (score> 50 && score <= 55){
+			grade = "B";
+		}
+		else if (score> 55 && score <= 60){
+			grade = "B-";
+		}
+		else if (score> 60 && score <= 65){
+			grade = "C+";
+		}
+		else if (score> 65 && score <= 70){
+			grade = "C";
+		}
+		else if (score> 70 && score <= 75){
+			grade = "C-";
+		}
+		else if (score> 75 && score <= 80){
+			grade = "D+";
+		}
+		else if (score> 80 && score <= 85){
+			grade = "D";
+		}
+		else if (score> 85 && score <= 90){
+			grade = "D-";
+		}
+		else if (score> 90 && score <= 95){
+			grade = "F+";
+		}
+		else if (score> 95 && score <= 100){
+			grade = "F";
+		}
+		return grade;
 	}
 }
