@@ -1,15 +1,19 @@
+import java.awt.Point;
 import java.util.Random;
+
 		
 public class GameBoard {
 	
 	private int size = 10;
 	private int [][] boardArray = new int [size][size];
 	private int [] shipSizeArray = { 5,4,3,3,2 };
-	private String grade; 
-	// TODO add board grading (rank) system
+	private int numOfPoints = 100;
+	private Point [] spiralPoints = new Point [numOfPoints];
+	private Point [] quadCheckerPoints = new Point [numOfPoints];
+	
+	//TODO evolving heuristics for Battleship Power Point
 	
 	public GameBoard(){
-		grade = null;
 		for (int row=0; row<size; row++){
 			for (int col=0; col<size; col++){
 				boardArray[row][col] = 0;
@@ -20,8 +24,9 @@ public class GameBoard {
 		//System.out.println();
 	}
 	
-	public GameBoard(int [][] array){
-		grade = null;
+	public GameBoard(int [][] array, Point [] sArray, Point [] qcArray){
+		spiralPoints = sArray;
+		quadCheckerPoints = qcArray;
 		for (int row=0; row<size; row++){
 			for (int col=0; col<size; col++){
 				boardArray[row][col] = array[row][col];
@@ -52,7 +57,7 @@ public class GameBoard {
 			int shipY = generator.nextInt(size);
 			
 			if (boardArray[shipY][shipX] !=0){
-				System.out.println("Random position already filled.");
+				//System.out.println("Random position already filled.");
 				continue;
 			}
 			else{
@@ -194,12 +199,10 @@ public class GameBoard {
 		return numOfMoves;
 	}
 
-	// TODO Optimize with queue and list of ships?
 	public int modifiedLinearSearch(){
 		int numOfHits = 0;
 		int numOfMoves = 0;
 		int [][] checkArray = new int [size][size];
-		
 		
 		for (int row=0; row<size; row++){
 			for (int col=0; col<size; col++){
@@ -605,11 +608,825 @@ public class GameBoard {
 		int numOfHits = 0;
 		int numOfMoves = 0;
 		int [][] checkArray = new int [size][size];
-		Random generator = new Random();
+		int start = 0;
 		
 		for (int row=0; row<size; row++){
 			for (int col=0; col<size; col++){
 				checkArray[row][col] = 0;
+			}
+		}
+		
+		while(numOfHits < 17){
+			for (int row=0; row<size; row++){
+				for (int col=start; col<size; col+=2){
+					
+					// If the space has already been checked, continue to next space
+					if (checkArray[row][col] != 0){
+						continue;
+					}
+					
+					// If space hasn't been checked
+					else {
+						checkArray[row][col] = 1;
+						numOfMoves+=1;
+						
+						// If battleship is hit
+						if (boardArray[row][col] != 0){
+							numOfHits+=1;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check to the left 
+							boolean leftHit = false;
+							if (col-1 >= 0 && checkArray[row][col-1] == 0){
+								checkArray[row][col-1] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col-1] != 0){
+									numOfHits+=1;
+									leftHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (leftHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){
+									if (col-num >= 0 && checkArray[row][col-num] == 0){
+										checkArray[row][col-num] = 1;
+										numOfMoves+=1;
+										if (boardArray[row][col-num] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check below
+							boolean belowHit = false;
+							if (row+1 < 10 && checkArray[row+1][col] == 0){
+								checkArray[row+1][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row+1][col] != 0){
+									numOfHits+=1;
+									belowHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (belowHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){
+									if (row+num < 10 && checkArray[row+num][col] == 0){
+										checkArray[row+num][col] = 1;
+										numOfMoves+=1;
+										if (boardArray[row+num][col] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check to the right
+							boolean rightHit = false;
+							if (col+1 < 10 && checkArray[row][col+1] == 0){
+								checkArray[row][col+1] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col+1] != 0){
+									numOfHits+=1;
+									rightHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (rightHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){
+									if (col+num < 10 && checkArray[row][col+num] == 0){
+										checkArray[row][col+num] = 1;
+										numOfMoves+=1;
+										if (boardArray[row][col+num] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check above
+							boolean aboveHit = false;
+							if (row-1 >= 0 && checkArray[row-1][col] == 0){
+								checkArray[row-1][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row-1][col] != 0){
+									numOfHits+=1;
+									aboveHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (aboveHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){				
+									if (row-num >= 0 && checkArray[row-num][col] == 0){
+										checkArray[row-num][col] = 1;
+										numOfMoves+=1;
+										if (boardArray[row-num][col] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+						
+						// If all battleships are sunk, return number of moves
+						if (numOfHits == 17){
+							return numOfMoves;
+						}
+					}
+				}
+			}
+			
+			if(numOfHits >=17){
+				return numOfMoves;
+			}
+			else{
+				start += 1;
+			}
+		} // end of while
+		return 10000; // This will throw off average and make it easy to see where the search messes up.
+	} // end of every other search
+
+	public int modifiedEveryThirdSearch(){
+		int numOfHits = 0;
+		int numOfMoves = 0;
+		int [][] checkArray = new int [size][size];
+		int start = 0;
+		
+		for (int row=0; row<size; row++){
+			for (int col=0; col<size; col++){
+				checkArray[row][col] = 0;
+			}
+		}
+		
+		while(numOfHits < 17){
+			for (int row=0; row<size; row++){
+				for (int col=start; col<size; col+=3){
+					
+					// If the space has already been checked, continue to next space
+					if (checkArray[row][col] != 0){
+						continue;
+					}
+					
+					// If space hasn't been checked
+					else {
+						checkArray[row][col] = 1;
+						numOfMoves+=1;
+						
+						// If battleship is hit
+						if (boardArray[row][col] != 0){
+							numOfHits+=1;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check to the left 
+							boolean leftHit = false;
+							if (col-1 >= 0 && checkArray[row][col-1] == 0){
+								checkArray[row][col-1] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col-1] != 0){
+									numOfHits+=1;
+									leftHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (leftHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){
+									if (col-num >= 0 && checkArray[row][col-num] == 0){
+										checkArray[row][col-num] = 1;
+										numOfMoves+=1;
+										if (boardArray[row][col-num] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check below
+							boolean belowHit = false;
+							if (row+1 < 10 && checkArray[row+1][col] == 0){
+								checkArray[row+1][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row+1][col] != 0){
+									numOfHits+=1;
+									belowHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (belowHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){
+									if (row+num < 10 && checkArray[row+num][col] == 0){
+										checkArray[row+num][col] = 1;
+										numOfMoves+=1;
+										if (boardArray[row+num][col] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check to the right
+							boolean rightHit = false;
+							if (col+1 < 10 && checkArray[row][col+1] == 0){
+								checkArray[row][col+1] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col+1] != 0){
+									numOfHits+=1;
+									rightHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (rightHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){
+									if (col+num < 10 && checkArray[row][col+num] == 0){
+										checkArray[row][col+num] = 1;
+										numOfMoves+=1;
+										if (boardArray[row][col+num] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+							
+							// Check above
+							boolean aboveHit = false;
+							if (row-1 >= 0 && checkArray[row-1][col] == 0){
+								checkArray[row-1][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row-1][col] != 0){
+									numOfHits+=1;
+									aboveHit = true;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+							}
+							if (aboveHit){
+								boolean keepSearching = true;
+								int num = 2;
+								while (keepSearching){				
+									if (row-num >= 0 && checkArray[row-num][col] == 0){
+										checkArray[row-num][col] = 1;
+										numOfMoves+=1;
+										if (boardArray[row-num][col] != 0){
+											numOfHits+=1;
+											num+=1;
+											if (numOfHits == 17){
+												return numOfMoves;
+											}
+										}
+										else{
+											keepSearching = false;
+										}
+									}
+									else{
+										keepSearching = false;
+									}
+								}
+							}
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+						
+						// If all battleships are sunk, return number of moves
+						if (numOfHits == 17){
+							return numOfMoves;
+						}
+					}
+				}
+			}
+			if(numOfHits >=17){
+				return numOfMoves;
+			}
+			else{
+				start += 1;
+			}
+		} // end of while
+		return 10000; // This will throw off average and make it easy to see where the search messes up.
+	} // end of every third search
+
+	public int spiralSearch(){
+		int numOfHits = 0;
+		int numOfMoves = 0;
+		int [][] checkArray = new int [size][size];
+		
+		for (int row=0; row<size; row++){
+			for (int col=0; col<size; col++){
+				checkArray[row][col] = 0;
+			}
+		}
+		
+		for(int i=0; i<numOfPoints; i++){
+			int row = (int) spiralPoints[i].getY();
+			int col = (int) spiralPoints[i].getX();
+			
+			// If the space has already been checked, continue to next space
+			if (checkArray[row][col] != 0){
+				continue;
+			}
+			
+			// If space hasn't been checked
+			else {
+				checkArray[row][col] = 1;
+				numOfMoves+=1;
+				
+				// If battleship is hit
+				if (boardArray[row][col] != 0){
+					numOfHits+=1;
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check to the left 
+					boolean leftHit = false;
+					if (col-1 >= 0 && checkArray[row][col-1] == 0){
+						checkArray[row][col-1] = 1;
+						numOfMoves+=1;
+						if (boardArray[row][col-1] != 0){
+							numOfHits+=1;
+							leftHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (leftHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){
+							if (col-num >= 0 && checkArray[row][col-num] == 0){
+								checkArray[row][col-num] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col-num] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check below
+					boolean belowHit = false;
+					if (row+1 < 10 && checkArray[row+1][col] == 0){
+						checkArray[row+1][col] = 1;
+						numOfMoves+=1;
+						if (boardArray[row+1][col] != 0){
+							numOfHits+=1;
+							belowHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (belowHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){
+							if (row+num < 10 && checkArray[row+num][col] == 0){
+								checkArray[row+num][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row+num][col] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check to the right
+					boolean rightHit = false;
+					if (col+1 < 10 && checkArray[row][col+1] == 0){
+						checkArray[row][col+1] = 1;
+						numOfMoves+=1;
+						if (boardArray[row][col+1] != 0){
+							numOfHits+=1;
+							rightHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (rightHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){
+							if (col+num < 10 && checkArray[row][col+num] == 0){
+								checkArray[row][col+num] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col+num] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check above
+					boolean aboveHit = false;
+					if (row-1 >= 0 && checkArray[row-1][col] == 0){
+						checkArray[row-1][col] = 1;
+						numOfMoves+=1;
+						if (boardArray[row-1][col] != 0){
+							numOfHits+=1;
+							aboveHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (aboveHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){				
+							if (row-num >= 0 && checkArray[row-num][col] == 0){
+								checkArray[row-num][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row-num][col] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+				}
+				
+				// If all battleships are sunk, return number of moves
+				if (numOfHits == 17){
+					return numOfMoves;
+				}
+			}
+		}	
+		
+		return numOfMoves;
+	}
+
+	public int quadCheckerSearch(){
+		int numOfHits = 0;
+		int numOfMoves = 0;
+		int [][] checkArray = new int [size][size];
+		
+		for (int row=0; row<size; row++){
+			for (int col=0; col<size; col++){
+				checkArray[row][col] = 0;
+			}
+		}
+		
+		for(int i=0; i<numOfPoints; i++){
+			int row = (int) quadCheckerPoints[i].getY();
+			int col = (int) quadCheckerPoints[i].getX();
+			
+			// If the space has already been checked, continue to next space
+			if (checkArray[row][col] != 0){
+				continue;
+			}
+			
+			// If space hasn't been checked
+			else {
+				checkArray[row][col] = 1;
+				numOfMoves+=1;
+				
+				// If battleship is hit
+				if (boardArray[row][col] != 0){
+					numOfHits+=1;
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check to the left 
+					boolean leftHit = false;
+					if (col-1 >= 0 && checkArray[row][col-1] == 0){
+						checkArray[row][col-1] = 1;
+						numOfMoves+=1;
+						if (boardArray[row][col-1] != 0){
+							numOfHits+=1;
+							leftHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (leftHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){
+							if (col-num >= 0 && checkArray[row][col-num] == 0){
+								checkArray[row][col-num] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col-num] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check below
+					boolean belowHit = false;
+					if (row+1 < 10 && checkArray[row+1][col] == 0){
+						checkArray[row+1][col] = 1;
+						numOfMoves+=1;
+						if (boardArray[row+1][col] != 0){
+							numOfHits+=1;
+							belowHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (belowHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){
+							if (row+num < 10 && checkArray[row+num][col] == 0){
+								checkArray[row+num][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row+num][col] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check to the right
+					boolean rightHit = false;
+					if (col+1 < 10 && checkArray[row][col+1] == 0){
+						checkArray[row][col+1] = 1;
+						numOfMoves+=1;
+						if (boardArray[row][col+1] != 0){
+							numOfHits+=1;
+							rightHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (rightHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){
+							if (col+num < 10 && checkArray[row][col+num] == 0){
+								checkArray[row][col+num] = 1;
+								numOfMoves+=1;
+								if (boardArray[row][col+num] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+					
+					// Check above
+					boolean aboveHit = false;
+					if (row-1 >= 0 && checkArray[row-1][col] == 0){
+						checkArray[row-1][col] = 1;
+						numOfMoves+=1;
+						if (boardArray[row-1][col] != 0){
+							numOfHits+=1;
+							aboveHit = true;
+							if (numOfHits == 17){
+								return numOfMoves;
+							}
+						}
+					}
+					if (aboveHit){
+						boolean keepSearching = true;
+						int num = 2;
+						while (keepSearching){				
+							if (row-num >= 0 && checkArray[row-num][col] == 0){
+								checkArray[row-num][col] = 1;
+								numOfMoves+=1;
+								if (boardArray[row-num][col] != 0){
+									numOfHits+=1;
+									num+=1;
+									if (numOfHits == 17){
+										return numOfMoves;
+									}
+								}
+								else{
+									keepSearching = false;
+								}
+							}
+							else{
+								keepSearching = false;
+							}
+						}
+					}
+					if (numOfHits == 17){
+						return numOfMoves;
+					}
+				}
+				
+				// If all battleships are sunk, return number of moves
+				if (numOfHits == 17){
+					return numOfMoves;
+				}
 			}
 		}
 		
