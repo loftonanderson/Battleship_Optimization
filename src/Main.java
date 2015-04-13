@@ -37,7 +37,7 @@ public class Main {
 		Point [] spiralPoints = new Point [numOfPoints];
 		Point [] quadCheckerPoints = new Point [numOfPoints];
 		int [] linearSearchFrequency = new int [numOfPoints];
-		int [] randomSearchFrequency = new int [numOfBoards];
+		int [] randomSearchFrequency = new int [numOfPoints];
 		int [] modifiedLinearSearchFrequency = new int [numOfPoints];
 		int [] modifiedRandomSearchFrequency = new int [numOfPoints];
 		int [] modifiedEveryOtherSearchFrequency = new int [numOfPoints];
@@ -152,65 +152,79 @@ public class Main {
 			System.out.println();
 			System.out.println("-Linear Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
+				System.out.println(linearSearchFrequency[i]+"  ");
+				/*
 				if(linearSearchFrequency[i] != 0){
 					System.out.print((i+1)+":"+linearSearchFrequency[i]+"  ");
 				}
+				*/
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Random Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
+				System.out.println(randomSearchFrequency[i]+"  ");
+				/*
 				if(randomSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+randomSearchFrequency[i]+"  ");
+					System.out.println((i+1)+":"+randomSearchFrequency[i]+"  ");
 				}
+				*/
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Modified Linear Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
+				System.out.println(modifiedLinearSearchFrequency[i]+"  ");
+				/*
 				if(modifiedLinearSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+modifiedLinearSearchFrequency[i]+"  ");
+					System.out.println((i+1)+":"+modifiedLinearSearchFrequency[i]+"  ");
 				}
+				*/
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Modified Random Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
-				if(modifiedRandomSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+modifiedRandomSearchFrequency[i]+"  ");
-				}
+				System.out.println(modifiedRandomSearchFrequency[i]+"  ");
+				//if(modifiedRandomSearchFrequency[i] != 0){
+				//	System.out.println((i+1)+":"+modifiedRandomSearchFrequency[i]+"  ");
+				//}
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Modified Every Other Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
-				if(modifiedEveryOtherSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+modifiedEveryOtherSearchFrequency[i]+"  ");
-				}
+				System.out.println(modifiedEveryOtherSearchFrequency[i]+"  ");
+				//if(modifiedEveryOtherSearchFrequency[i] != 0){
+				//	System.out.println((i+1)+":"+modifiedEveryOtherSearchFrequency[i]+"  ");
+				//}
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Modified Every Third Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
-				if(modifiedEveryThirdSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+modifiedEveryThirdSearchFrequency[i]+"  ");
-				}
+				System.out.println(modifiedEveryThirdSearchFrequency[i]+"  ");
+				//if(modifiedEveryThirdSearchFrequency[i] != 0){
+				//	System.out.println((i+1)+":"+modifiedEveryThirdSearchFrequency[i]+"  ");
+				//}
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Spiral Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
-				if(spiralSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+spiralSearchFrequency[i]+"  ");
-				}
+				System.out.println(spiralSearchFrequency[i]+"  ");
+				//if(spiralSearchFrequency[i] != 0){
+				//	System.out.println((i+1)+":"+spiralSearchFrequency[i]+"  ");
+				//}
 			}
 			System.out.println();
 			System.out.println();
 			System.out.println("-Quadradic Checker Search Frequency-");
 			for (int i=0; i<numOfPoints; i++){
-				if(quadCheckerSearchFrequency[i] != 0){
-					System.out.print((i+1)+":"+quadCheckerSearchFrequency[i]+"  ");
-				}
+				System.out.println(quadCheckerSearchFrequency[i]+"  ");
+				//if(quadCheckerSearchFrequency[i] != 0){
+				//	System.out.println((i+1)+":"+quadCheckerSearchFrequency[i]+"  ");
+				//}
 			}
 			System.out.println();
 			
